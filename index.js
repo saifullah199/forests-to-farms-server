@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -37,6 +37,35 @@ async function run() {
         const result = await cursor.toArray();
         res.send(result);
     })
+
+    app.get('/item/:id', async(req,res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await itemCollection.findOne(query)
+      res.send(result);
+    })
+
+    app.get('/item/:email', async(req,res) => {
+      const email = req.params.email;
+      const query = {email: new ObjectId(email)}
+      const result = await itemCollection.findOne(query)
+      res.send(result)
+    })
+
+
+  //   app.get('/item', async (req, res) => {
+  //     const { email } = req.query; 
+
+  //     try {
+  //         const cursor = itemCollection.find({ email: email }); 
+  //         const result = await cursor.toArray();
+  //         res.send(result);
+  //     } catch (error) {
+  //         console.error("Error fetching items:", error);
+  //         res.status(500).send("Error fetching items");
+  //     }
+  // });
+  
     
     app.post('/item', async(req,res) =>{
         const newItem =req.body;
