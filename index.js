@@ -45,6 +45,29 @@ async function run() {
       res.send(result);
     })
 
+
+    app.put('/item/:id', async(req,res) => {
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const options = {upsert: true}
+      const updatedItem = req.body;
+      const item = {
+        $set: {
+          name:updatedItem.name, 
+          subcategory:updatedItem.subcategory,
+          price:updatedItem.price,
+          rating:updatedItem.rating,
+          customization:updatedItem.customization,
+          description:updatedItem.description, 
+          processing:updatedItem.processing,
+          stock:updatedItem.stock,
+          photo:updatedItem.photo
+        }
+      }
+      const result = await itemCollection.updateOne(filter, item, options)
+      res.send(result)
+    })
+
     app.get('/item/:email', async(req,res) => {
       const email = req.params.email;
       const query = {email: new ObjectId(email)}
