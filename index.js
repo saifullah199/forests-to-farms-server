@@ -31,13 +31,16 @@ async function run() {
     await client.connect();
 
     const itemCollection = client.db('itemDB').collection('item')
+    const subCategoryCollection = client.db('itemDB').collection('subcategory')
 
+    // get items
     app.get('/item', async(req,res) => {
         const cursor = itemCollection.find();
         const result = await cursor.toArray();
         res.send(result);
     })
 
+    // get item for updating specific item or create a dynamic route for a id
     app.get('/item/:id', async(req,res) => {
       const id = req.params.id;
       const query = {_id: new ObjectId(id)}
@@ -46,6 +49,7 @@ async function run() {
     })
 
 
+    // update a item
     app.put('/item/:id', async(req,res) => {
       const id = req.params.id;
       const filter = {_id: new ObjectId(id)}
@@ -69,6 +73,7 @@ async function run() {
     })
 
 
+    // find a item by email 
     app.get("/mylist/:email", async(req, res) => {
       console.log(req.params.email);
       const result = await itemCollection.find({email: req.params.email}).toArray();
@@ -78,7 +83,7 @@ async function run() {
 
     
   
-    
+    // post items to the server and mongoDB
     app.post('/item', async(req,res) =>{
         const newItem =req.body;
         console.log(newItem)
@@ -87,6 +92,7 @@ async function run() {
         res.send(result)
     })
 
+    // delete a single item
     app.delete('/item/:id', async(req,res) =>{
       const id = req.params.id;
       console.log(id)
@@ -94,6 +100,14 @@ async function run() {
       const result =await itemCollection.deleteOne(query);
       res.send(result)
     })
+
+    // make a route for subcategory
+    app.get('/subcategory', async(req,res) => {
+      const cursor = subCategoryCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
