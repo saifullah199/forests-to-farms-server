@@ -68,26 +68,18 @@ async function run() {
       res.send(result)
     })
 
-    app.get('/item/:email', async(req,res) => {
-      const email = req.params.email;
-      const query = {email: new ObjectId(email)}
-      const result = await itemCollection.findOne(query)
-      res.send(result)
-    })
 
 
-  //   app.get('/item', async (req, res) => {
-  //     const { email } = req.query; 
 
-  //     try {
-  //         const cursor = itemCollection.find({ email: email }); 
-  //         const result = await cursor.toArray();
-  //         res.send(result);
-  //     } catch (error) {
-  //         console.error("Error fetching items:", error);
-  //         res.status(500).send("Error fetching items");
-  //     }
-  // });
+    app.get('/user/items', async (req, res) => {
+      const { email } = req.query; 
+
+      const cursor = itemCollection.find({ email: email }); 
+          const result = await cursor.toArray();
+          res.send(result);
+          
+    
+  });
   
     
     app.post('/item', async(req,res) =>{
@@ -96,6 +88,14 @@ async function run() {
 
         const result = await itemCollection.insertOne(newItem);
         res.send(result)
+    })
+
+    app.delete('/item/:id', async(req,res) =>{
+      const id = req.params.id;
+      console.log(id)
+      const query = {_id: new ObjectId(id)}
+      const result =await itemCollection.deleteOne(query);
+      res.send(result)
     })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
