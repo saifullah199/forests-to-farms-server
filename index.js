@@ -80,6 +80,12 @@ async function run() {
       res.send(result)
     })
 
+    app.get("/subcategory/:subcategory", async(req,res) => {
+      console.log(req.params.subcategory);
+      const result = await itemCollection.find({subcategory: req.params.subcategory}).toArray();
+      res.send(result)
+    })
+
 
     
   
@@ -107,6 +113,12 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     })
+
+    // app.get('/craftcategory/:subcategory', async(req,res) => {
+    //   console.log(req.params.subcategory)
+    //   const result = await subCategoryCollection.find({subcategory: req.params.subcategory}).toArray();
+    //   res.send(result)
+    // })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
